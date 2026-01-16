@@ -1,0 +1,451 @@
+﻿<Window x:Class="SmartWMS.Views.CellControlWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SmartWMS.Views"
+        mc:Ignorable="d"
+        Title="Cell Configuration"
+        Width="1000" Height="700"
+        MinWidth="800" MinHeight="500"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="CanResizeWithGrip">
+
+    <Border Background="White" CornerRadius="12" BorderBrush="#e5e7eb" BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="20" ShadowDepth="0" Opacity="0.3"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Border Grid.Row="0" BorderBrush="#f0f2f4" BorderThickness="0,0,0,1" Padding="24,16"
+                    Background="White" CornerRadius="12,12,0,0" MouseLeftButtonDown="Header_MouseLeftButtonDown">
+                <Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <Border Width="40" Height="40" CornerRadius="8" Background="#eff6ff">
+                            <TextBlock Text="&#xE957;" FontFamily="Segoe MDL2 Assets" FontSize="18"
+                                       Foreground="{StaticResource PrimaryBrush}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Margin="16,0,0,0" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontSize="18" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}">
+                                    <Run Text="Configuration: Cell "/>
+                                    <Run Text="{Binding Cell.CellCode}"/>
+                                </TextBlock>
+                                <Ellipse Width="10" Height="10" Margin="12,0,0,0" VerticalAlignment="Center">
+                                    <Ellipse.Style>
+                                        <Style TargetType="Ellipse">
+                                            <Setter Property="Fill" Value="{StaticResource SuccessBrush}"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Cell.Status}" Value="Warning">
+                                                    <Setter Property="Fill" Value="{StaticResource DangerBrush}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Ellipse.Style>
+                                </Ellipse>
+                            </StackPanel>
+                            <TextBlock FontSize="12" Foreground="{StaticResource TextSecondaryBrush}">
+                                <Run Text="{Binding Cell.Zone}"/>
+                                <Run Text=" • Semiconductor Storage"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <Button HorizontalAlignment="Right" VerticalAlignment="Top"
+                            Style="{StaticResource SecondaryButton}" Padding="8"
+                            BorderThickness="0" Background="Transparent"
+                            Click="CloseButton_Click">
+                        <TextBlock Text="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- Content -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="24">
+                <StackPanel>
+                    <!-- Current Conditions -->
+                    <TextBlock Text="CURRENT CONDITIONS" FontSize="11" FontWeight="SemiBold"
+                               Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,16"/>
+
+                    <UniformGrid Columns="2" Margin="0,0,0,32">
+                        <!-- Temperature Card -->
+                        <Border Background="#f9fafb" CornerRadius="12" Padding="20" Margin="0,0,8,0"
+                                BorderBrush="#e5e7eb" BorderThickness="1">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#xE9CA;" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                                   Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Temperature (°C)" FontSize="13" FontWeight="Medium"
+                                                   Foreground="{StaticResource TextSecondaryBrush}" Margin="8,0,0,0"/>
+                                    </StackPanel>
+                                    <Border HorizontalAlignment="Right" CornerRadius="4" Padding="8,4">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="#ecfdf5"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsTemperatureWithinRange}" Value="False">
+                                                        <Setter Property="Background" Value="#fef2f2"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock FontSize="11" FontWeight="Bold">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Text" Value="Within Range"/>
+                                                    <Setter Property="Foreground" Value="#059669"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsTemperatureWithinRange}" Value="False">
+                                                            <Setter Property="Text" Value="Out of Range"/>
+                                                            <Setter Property="Foreground" Value="#dc2626"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Border>
+                                </Grid>
+
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,12,0,0">
+                                    <TextBlock FontSize="32" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}">
+                                        <Run Text="{Binding Cell.Temperature, StringFormat={}{0:F1}}"/>
+                                        <Run Text="°"/>
+                                    </TextBlock>
+                                    <TextBlock FontSize="13" Foreground="{StaticResource TextSecondaryBrush}"
+                                               VerticalAlignment="Bottom" Margin="8,0,0,6">
+                                        <Run Text="/ Target: "/>
+                                        <Run Text="{Binding TargetTemperature, StringFormat={}{0:F1}}"/>
+                                        <Run Text="°"/>
+                                    </TextBlock>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,8,0,0">
+                                    <TextBlock Text="&#xE74A;" FontFamily="Segoe MDL2 Assets" FontSize="12"
+                                               VerticalAlignment="Center">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{StaticResource SuccessBrush}"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsTemperatureWithinRange}" Value="False">
+                                                        <Setter Property="Foreground" Value="{StaticResource DangerBrush}"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <TextBlock FontSize="13" FontWeight="Medium" Margin="4,0,0,0">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{StaticResource SuccessBrush}"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsTemperatureWithinRange}" Value="False">
+                                                        <Setter Property="Foreground" Value="{StaticResource DangerBrush}"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                        <Run Text="{Binding TemperatureDeviation, Mode=OneWay, StringFormat={}{0:+0.0;-0.0;0.0}}"/>
+                                        <Run Text=" ("/>
+                                        <Run>
+                                            <Run.Style>
+                                                <Style TargetType="Run">
+                                                    <Setter Property="Text" Value="Acceptable"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsTemperatureWithinRange}" Value="False">
+                                                            <Setter Property="Text" Value="Critical"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Run.Style>
+                                        </Run>
+                                        <Run Text=")"/>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <!-- Humidity Card -->
+                        <Border Background="#f9fafb" CornerRadius="12" Padding="20" Margin="8,0,0,0"
+                                BorderBrush="#e5e7eb" BorderThickness="1">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#xE798;" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                                   Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Humidity (%)" FontSize="13" FontWeight="Medium"
+                                                   Foreground="{StaticResource TextSecondaryBrush}" Margin="8,0,0,0"/>
+                                    </StackPanel>
+                                    <Border HorizontalAlignment="Right" CornerRadius="4" Padding="8,4"
+                                            Background="#dbeafe">
+                                        <TextBlock Text="Optimal" FontSize="11" FontWeight="Bold" Foreground="#2563eb"/>
+                                    </Border>
+                                </Grid>
+
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,12,0,0">
+                                    <TextBlock FontSize="32" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}">
+                                        <Run Text="{Binding Cell.Humidity, StringFormat={}{0:F0}}"/>
+                                        <Run Text="%"/>
+                                    </TextBlock>
+                                    <TextBlock FontSize="13" Foreground="{StaticResource TextSecondaryBrush}"
+                                               VerticalAlignment="Bottom" Margin="8,0,0,6">
+                                        <Run Text="/ Target: "/>
+                                        <Run Text="{Binding TargetHumidity, StringFormat={}{0:F0}}"/>
+                                        <Run Text="%"/>
+                                    </TextBlock>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,8,0,0">
+                                    <TextBlock Text="&#xE738;" FontFamily="Segoe MDL2 Assets" FontSize="12"
+                                               Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock FontSize="13" FontWeight="Medium" Margin="4,0,0,0"
+                                               Foreground="{StaticResource TextSecondaryBrush}">
+                                        <Run Text="{Binding HumidityDeviation, Mode=OneWay, StringFormat={}{0:+0.0;-0.0;0.0}}"/>
+                                        <Run Text=" deviation"/>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </UniformGrid>
+
+                    <!-- Environment Settings -->
+                    <Grid Margin="0,0,0,16">
+                        <TextBlock Text="ENVIRONMENT SETTINGS" FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <Button HorizontalAlignment="Right" Style="{StaticResource SecondaryButton}"
+                                Padding="0" BorderThickness="0" Background="Transparent"
+                                Command="{Binding ResetCommand}">
+                            <TextBlock Text="Reset to Default" FontSize="13" FontWeight="Medium"
+                                       Foreground="{StaticResource PrimaryBrush}"/>
+                        </Button>
+                    </Grid>
+
+                    <Border Background="White" CornerRadius="12" Padding="24"
+                            BorderBrush="#e5e7eb" BorderThickness="1">
+                        <StackPanel>
+                            <!-- Temperature Settings -->
+                            <UniformGrid Columns="2" Margin="0,0,0,20">
+                                <StackPanel Margin="0,0,12,0">
+                                    <TextBlock Text="Target Temperature (°C)" FontSize="13" FontWeight="Medium"
+                                               Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,8"/>
+                                    <TextBox Text="{Binding TargetTemperature, UpdateSourceTrigger=PropertyChanged}"
+                                             Padding="12,10" FontSize="14" Background="#f9fafb"
+                                             BorderBrush="#e5e7eb" BorderThickness="1"/>
+                                </StackPanel>
+                                <StackPanel Margin="12,0,0,0">
+                                    <TextBlock Text="Temp Tolerance (±)" FontSize="13" FontWeight="Medium"
+                                               Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,8"/>
+                                    <TextBox Text="{Binding TemperatureTolerance, UpdateSourceTrigger=PropertyChanged}"
+                                             Padding="12,10" FontSize="14" Background="#f9fafb"
+                                             BorderBrush="#e5e7eb" BorderThickness="1"/>
+                                </StackPanel>
+                            </UniformGrid>
+
+                            <Border Height="1" Background="#f0f2f4" Margin="0,0,0,20"/>
+
+                            <!-- Humidity Settings -->
+                            <UniformGrid Columns="2" Margin="0,0,0,20">
+                                <StackPanel Margin="0,0,12,0">
+                                    <TextBlock Text="Target Humidity (%)" FontSize="13" FontWeight="Medium"
+                                               Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,8"/>
+                                    <TextBox Text="{Binding TargetHumidity, UpdateSourceTrigger=PropertyChanged}"
+                                             Padding="12,10" FontSize="14" Background="#f9fafb"
+                                             BorderBrush="#e5e7eb" BorderThickness="1"/>
+                                </StackPanel>
+                                <StackPanel Margin="12,0,0,0">
+                                    <TextBlock Text="Humidity Tolerance (±)" FontSize="13" FontWeight="Medium"
+                                               Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,8"/>
+                                    <TextBox Text="{Binding HumidityTolerance, UpdateSourceTrigger=PropertyChanged}"
+                                             Padding="12,10" FontSize="14" Background="#f9fafb"
+                                             BorderBrush="#e5e7eb" BorderThickness="1"/>
+                                </StackPanel>
+                            </UniformGrid>
+
+                            <Border Height="1" Background="#f0f2f4" Margin="0,0,0,20"/>
+
+                            <!-- Light Control -->
+                            <Grid>
+                                <StackPanel>
+                                    <TextBlock Text="Light Exposure Control" FontSize="14" FontWeight="Medium"
+                                               Foreground="{StaticResource TextPrimaryBrush}"/>
+                                    <TextBlock Text="Block external light for sensitive materials" FontSize="12"
+                                               Foreground="{StaticResource TextSecondaryBrush}" Margin="0,4,0,0"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                    <CheckBox IsChecked="{Binding BlockLight}" VerticalAlignment="Center">
+                                        <CheckBox.LayoutTransform>
+                                            <ScaleTransform ScaleX="1.2" ScaleY="1.2"/>
+                                        </CheckBox.LayoutTransform>
+                                    </CheckBox>
+                                    <TextBlock FontSize="13" FontWeight="Medium" Margin="8,0,0,0"
+                                               Foreground="{StaticResource TextPrimaryBrush}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Text" Value="Blocked"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding BlockLight}" Value="False">
+                                                        <Setter Property="Text" Value="Allowed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Alert History -->
+                    <TextBlock Text="ALERT HISTORY (LAST 24H)" FontSize="11" FontWeight="SemiBold"
+                               Foreground="{StaticResource TextSecondaryBrush}" Margin="0,32,0,16"/>
+
+                    <Border CornerRadius="12" BorderBrush="#e5e7eb" BorderThickness="1" Background="White">
+                        <DataGrid ItemsSource="{Binding AlertHistory}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  HeadersVisibility="Column"
+                                  GridLinesVisibility="Horizontal"
+                                  HorizontalGridLinesBrush="#f0f2f4"
+                                  BorderThickness="0"
+                                  Background="Transparent"
+                                  CanUserAddRows="False">
+
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="Background" Value="#f9fafb"/>
+                                    <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+                                    <Setter Property="FontWeight" Value="Medium"/>
+                                    <Setter Property="FontSize" Value="11"/>
+                                    <Setter Property="Padding" Value="16,12"/>
+                                </Style>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="Padding" Value="16,12"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="DataGridCell">
+                                                <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                                                    <ContentPresenter VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </DataGrid.Resources>
+
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="TIME" Binding="{Binding Time}" Width="120">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+
+                                <DataGridTextColumn Header="EVENT" Binding="{Binding Event}" Width="*">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="FontWeight" Value="Medium"/>
+                                            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+
+                                <DataGridTextColumn Header="VALUE" Binding="{Binding Value}" Width="100">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+
+                                <DataGridTemplateColumn Header="STATUS" Width="120">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border CornerRadius="10" Padding="10,4" HorizontalAlignment="Left">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="Background" Value="#ecfdf5"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Log">
+                                                                <Setter Property="Background" Value="#f1f5f9"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Active">
+                                                                <Setter Property="Background" Value="#fef2f2"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                                <TextBlock FontSize="11" FontWeight="Medium">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Text" Value="Resolved"/>
+                                                            <Setter Property="Foreground" Value="#059669"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding Status}" Value="Log">
+                                                                    <Setter Property="Text" Value="Log"/>
+                                                                    <Setter Property="Foreground" Value="#64748b"/>
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding Status}" Value="Active">
+                                                                    <Setter Property="Text" Value="Active"/>
+                                                                    <Setter Property="Foreground" Value="#dc2626"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Footer -->
+            <Border Grid.Row="2" Background="#f9fafb" Padding="24,16"
+                    BorderBrush="#f0f2f4" BorderThickness="0,1,0,0"
+                    CornerRadius="0,0,12,12">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource SecondaryButton}" Content="Cancel"
+                            Padding="20,10" Margin="0,0,12,0"
+                            Command="{Binding CancelCommand}"/>
+                    <Button Style="{StaticResource PrimaryButton}" Padding="20,10"
+                            Command="{Binding ApplyCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Apply Changes" Margin="8,0,0,0"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

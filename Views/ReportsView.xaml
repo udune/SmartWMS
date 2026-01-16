@@ -1,0 +1,322 @@
+<UserControl x:Class="SmartWMS.Views.ReportsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:SmartWMS.Views"
+             mc:Ignorable="d"
+             d:DesignHeight="700" d:DesignWidth="1100"
+             Background="{StaticResource BackgroundBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1"
+                Padding="32,24">
+            <StackPanel>
+                <TextBlock Text="Warehouse Analytics &amp; Reports"
+                           FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                <TextBlock Text="Overview of warehouse operations and key performance indicators."
+                           FontSize="14" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,6,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="32">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- KPI Cards -->
+                <UniformGrid Grid.Row="0" Columns="4" Margin="0,0,0,24">
+                    <!-- Total Materials -->
+                    <Border Background="White" CornerRadius="12" Margin="0,0,16,0" Padding="24"
+                            BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Total Materials" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                <TextBlock Text="{Binding TotalMaterials}" FontSize="32" FontWeight="Black"
+                                           Foreground="{StaticResource TextPrimaryBrush}" Margin="0,8,0,0"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                    <TextBlock Text="↑" Foreground="{StaticResource SuccessBrush}" FontWeight="Bold"/>
+                                    <TextBlock Text="12% from last month" FontSize="12" Foreground="{StaticResource SuccessBrush}" Margin="4,0,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <Border Grid.Column="1" Width="48" Height="48" CornerRadius="12" Background="#eff6ff" VerticalAlignment="Top">
+                                <TextBlock Text="&#xE7B8;" FontFamily="Segoe MDL2 Assets" FontSize="24"
+                                           Foreground="{StaticResource PrimaryBrush}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!-- Inbound Today -->
+                    <Border Background="White" CornerRadius="12" Margin="0,0,16,0" Padding="24"
+                            BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Inbound Today" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                <TextBlock Text="{Binding InboundToday}" FontSize="32" FontWeight="Black"
+                                           Foreground="{StaticResource TextPrimaryBrush}" Margin="0,8,0,0"/>
+                                <TextBlock Text="Items received" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,8,0,0"/>
+                            </StackPanel>
+                            <Border Grid.Column="1" Width="48" Height="48" CornerRadius="12" Background="#ecfdf5" VerticalAlignment="Top">
+                                <TextBlock Text="&#xE72A;" FontFamily="Segoe MDL2 Assets" FontSize="24"
+                                           Foreground="{StaticResource SuccessBrush}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!-- Outbound Today -->
+                    <Border Background="White" CornerRadius="12" Margin="0,0,16,0" Padding="24"
+                            BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Outbound Today" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                <TextBlock Text="{Binding OutboundToday}" FontSize="32" FontWeight="Black"
+                                           Foreground="{StaticResource TextPrimaryBrush}" Margin="0,8,0,0"/>
+                                <TextBlock Text="Items dispatched" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,8,0,0"/>
+                            </StackPanel>
+                            <Border Grid.Column="1" Width="48" Height="48" CornerRadius="12" Background="#fef3c7" VerticalAlignment="Top">
+                                <TextBlock Text="&#xE72B;" FontFamily="Segoe MDL2 Assets" FontSize="24"
+                                           Foreground="{StaticResource WarningBrush}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!-- Low Stock Alerts -->
+                    <Border Background="White" CornerRadius="12" Padding="24"
+                            BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Low Stock Alerts" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                <TextBlock Text="{Binding LowStockAlerts}" FontSize="32" FontWeight="Black"
+                                           Foreground="{StaticResource DangerBrush}" Margin="0,8,0,0"/>
+                                <TextBlock Text="Requires attention" FontSize="12" Foreground="{StaticResource DangerBrush}" Margin="0,8,0,0"/>
+                            </StackPanel>
+                            <Border Grid.Column="1" Width="48" Height="48" CornerRadius="12" Background="#fef2f2" VerticalAlignment="Top">
+                                <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" FontSize="24"
+                                           Foreground="{StaticResource DangerBrush}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </UniformGrid>
+
+                <!-- Charts Row -->
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="360"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Inventory Trend Chart Placeholder -->
+                    <Border Background="White" CornerRadius="12" Margin="0,0,16,24" Padding="24"
+                            BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Inventory Movement Trend" FontSize="16" FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,20"/>
+
+                            <Border Grid.Row="1" Background="#f9fafb" CornerRadius="8" MinHeight="250">
+                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE9F9;" FontFamily="Segoe MDL2 Assets" FontSize="48"
+                                               Foreground="#cbd5e1" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Chart visualization will be displayed here"
+                                               FontSize="14" Foreground="{StaticResource TextSecondaryBrush}"
+                                               Margin="0,12,0,0"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!-- Material Type Distribution -->
+                    <Border Grid.Column="1" Background="White" CornerRadius="12" Margin="0,0,0,24" Padding="24"
+                            BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Material Distribution" FontSize="16" FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,20"/>
+
+                            <StackPanel Grid.Row="1">
+                                <!-- Photoresist -->
+                                <Grid Margin="0,0,0,16">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Text="Photoresist" FontSize="13" FontWeight="Medium" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                        <Border Height="8" CornerRadius="4" Background="#f1f5f9" Margin="0,8,0,0">
+                                            <Border Height="8" CornerRadius="4" Background="#7c3aed" HorizontalAlignment="Left" Width="180"/>
+                                        </Border>
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="1" Text="45%" FontSize="14" FontWeight="Bold"
+                                               Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center" Margin="16,0,0,0"/>
+                                </Grid>
+
+                                <!-- Thinner -->
+                                <Grid Margin="0,0,0,16">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Text="Thinner" FontSize="13" FontWeight="Medium" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                        <Border Height="8" CornerRadius="4" Background="#f1f5f9" Margin="0,8,0,0">
+                                            <Border Height="8" CornerRadius="4" Background="#2563eb" HorizontalAlignment="Left" Width="120"/>
+                                        </Border>
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="1" Text="30%" FontSize="14" FontWeight="Bold"
+                                               Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center" Margin="16,0,0,0"/>
+                                </Grid>
+
+                                <!-- Developer -->
+                                <Grid Margin="0,0,0,16">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Text="Developer" FontSize="13" FontWeight="Medium" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                        <Border Height="8" CornerRadius="4" Background="#f1f5f9" Margin="0,8,0,0">
+                                            <Border Height="8" CornerRadius="4" Background="#0d9488" HorizontalAlignment="Left" Width="100"/>
+                                        </Border>
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="1" Text="25%" FontSize="14" FontWeight="Bold"
+                                               Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center" Margin="16,0,0,0"/>
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- Recent Activity -->
+                <Border Grid.Row="2" Background="White" CornerRadius="12" Padding="24"
+                        BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Margin="0,0,0,20">
+                            <TextBlock Text="Recent Activity" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                            <Button HorizontalAlignment="Right" Style="{StaticResource SecondaryButton}" Padding="12,8" FontSize="12">
+                                <TextBlock Text="View All"/>
+                            </Button>
+                        </Grid>
+
+                        <StackPanel Grid.Row="1">
+                            <!-- Activity Item 1 -->
+                            <Border Padding="16" BorderBrush="#f0f2f4" BorderThickness="0,0,0,1">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Width="40" Height="40" CornerRadius="20" Background="#ecfdf5">
+                                        <TextBlock Text="&#xE72A;" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                                   Foreground="{StaticResource SuccessBrush}"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Margin="16,0">
+                                        <TextBlock FontSize="14" Foreground="{StaticResource TextPrimaryBrush}">
+                                            <Run Text="Inbound:" FontWeight="SemiBold"/>
+                                            <Run Text="AZ 5214E (50L) received to Cell A01"/>
+                                        </TextBlock>
+                                        <TextBlock Text="Operator: Kim, Worker ID: WK-001" FontSize="12"
+                                                   Foreground="{StaticResource TextSecondaryBrush}" Margin="0,4,0,0"/>
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="2" Text="2 min ago" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- Activity Item 2 -->
+                            <Border Padding="16" BorderBrush="#f0f2f4" BorderThickness="0,0,0,1">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Width="40" Height="40" CornerRadius="20" Background="#fef3c7">
+                                        <TextBlock Text="&#xE72B;" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                                   Foreground="{StaticResource WarningBrush}"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Margin="16,0">
+                                        <TextBlock FontSize="14" Foreground="{StaticResource TextPrimaryBrush}">
+                                            <Run Text="Outbound:" FontWeight="SemiBold"/>
+                                            <Run Text="OK 73 Thinner (20L) dispatched from Cell B02"/>
+                                        </TextBlock>
+                                        <TextBlock Text="Operator: Lee, Worker ID: WK-003" FontSize="12"
+                                                   Foreground="{StaticResource TextSecondaryBrush}" Margin="0,4,0,0"/>
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="2" Text="15 min ago" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- Activity Item 3 -->
+                            <Border Padding="16">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Width="40" Height="40" CornerRadius="20" Background="#fef2f2">
+                                        <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                                   Foreground="{StaticResource DangerBrush}"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Margin="16,0">
+                                        <TextBlock FontSize="14" Foreground="{StaticResource TextPrimaryBrush}">
+                                            <Run Text="Alert:" FontWeight="SemiBold"/>
+                                            <Run Text="Temperature exceeded threshold in Cell A02 (26.5°C)"/>
+                                        </TextBlock>
+                                        <TextBlock Text="Environment interlock activated" FontSize="12"
+                                                   Foreground="{StaticResource DangerBrush}" Margin="0,4,0,0"/>
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="2" Text="1 hour ago" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
