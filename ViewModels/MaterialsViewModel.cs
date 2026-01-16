@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using SmartWMS.Models;
 using SmartWMS.Services;
+using SmartWMS.Views;
 
 namespace SmartWMS.ViewModels;
 
@@ -130,9 +131,51 @@ public class MaterialsViewModel : ViewModelBase
         }
     }
 
-    private void Add()
+    private async void Add()
     {
-        // TODO: Open add material dialog
+        var window = new RegisterMaterialWindow
+        {
+            Owner = Application.Current.MainWindow
+        };
+
+        if (window.ShowDialog() == true && window.RegisteredMaterial != null)
+        {
+            try
+            {
+                IsLoading = true;
+                var created = await _apiService.CreateMaterialAsync(window.RegisteredMaterial);
+                if (created != null)
+                {
+                    _allMaterials.Add(created);
+                    FilterMaterials();
+                    MessageBox.Show(
+                        $"Material '{created.Name}' has been registered successfully.",
+                        "Success",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                MessageBox.Show(
+                    $"Failed to register material.\n\nPlease check if the API server is running.\n\nError: {ex.Message}",
+                    "Connection Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"An error occurred while registering the material.\n\nError: {ex.Message}",
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
     }
 
     private void Edit()
